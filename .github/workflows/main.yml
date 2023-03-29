@@ -1,0 +1,25 @@
+name: Manual deploy to DEV
+
+on:
+  workflow_dispatch:
+    inputs:
+      REF:
+        description: The branch, tag or SHA to deploy. (eg. 'v1.2.3', '83ef532', 'main')
+        required: false
+
+# Can't use ENV due to https://github.com/actions/runner/issues/480#issuecomment-1021278915
+jobs:
+  run:
+    name: Run - Dev
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      ref: ${{ github.event.inputs.ref }}
+      environment: 'dev'
+      account_id: '029720204697' # dazn-ar-dev
+      environment_url: https://wallet-dev.ar.dazn-dev.com
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      GLOBAL_JFROG_ARTIFACTORY_TOKEN: ${{ secrets.GLOBAL_JFROG_ARTIFACTORY_TOKEN }}
+      GLOBAL_GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+      GLOBAL_TERRAFORM_VISUAL_API_KEY: ${{ secrets.GLOBAL_TERRAFORM_VISUAL_API_KEY }}
